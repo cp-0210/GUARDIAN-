@@ -1,0 +1,997 @@
+[
+    {
+        "id": "6e045fe6e773ef13",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "242bf933d8c4786e",
+        "type": "ui_led",
+        "z": "6e045fe6e773ef13",
+        "order": 1,
+        "group": "b1a1df82f00acae8",
+        "width": 6,
+        "height": 1,
+        "label": "Device Connection Status",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#008000",
+                "value": "true",
+                "valueType": "str"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "MQTT Connection Status",
+        "x": 390,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "8ce6cbdaccbcef77",
+        "type": "ui_valuetrail",
+        "z": "6e045fe6e773ef13",
+        "group": "485ca1d4fc8b4fa2",
+        "order": 2,
+        "width": 6,
+        "height": 3,
+        "name": "Heart Rate",
+        "label": "",
+        "unit": "",
+        "blur": true,
+        "minmax": false,
+        "allowtoggle": true,
+        "showvalue": false,
+        "decimals": 0,
+        "colorLine": "#e62828",
+        "colorFromTheme": false,
+        "stroke": "3",
+        "property": "payload",
+        "pointcount": "12",
+        "x": 350,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "c3c4f7288e48c89e",
+        "type": "ui_digital_display",
+        "z": "6e045fe6e773ef13",
+        "name": "Heart Rate",
+        "group": "485ca1d4fc8b4fa2",
+        "order": 3,
+        "width": 2,
+        "height": 1,
+        "digits": "3",
+        "decimals": "0",
+        "x": 350,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "9f27ec814832b392",
+        "type": "ui_valuetrail",
+        "z": "6e045fe6e773ef13",
+        "group": "485ca1d4fc8b4fa2",
+        "order": 7,
+        "width": 6,
+        "height": 3,
+        "name": "SpO2 level",
+        "label": "",
+        "unit": "",
+        "blur": true,
+        "minmax": false,
+        "allowtoggle": true,
+        "showvalue": false,
+        "decimals": 0,
+        "colorLine": "#34c5ea",
+        "colorFromTheme": false,
+        "stroke": "3",
+        "property": "payload",
+        "pointcount": "12",
+        "x": 350,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "626893714b60cd47",
+        "type": "ui_digital_display",
+        "z": "6e045fe6e773ef13",
+        "name": "SpO2 level",
+        "group": "485ca1d4fc8b4fa2",
+        "order": 8,
+        "width": 2,
+        "height": 1,
+        "digits": "3",
+        "decimals": "1",
+        "x": 350,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "abd9898e48fd8e7e",
+        "type": "mqtt in",
+        "z": "6e045fe6e773ef13",
+        "name": "",
+        "topic": "testmsg",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "89d72d1177fd259d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "242bf933d8c4786e"
+            ]
+        ]
+    },
+    {
+        "id": "f5fac3392d52a09a",
+        "type": "inject",
+        "z": "6e045fe6e773ef13",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0,75.802460,26.848892,2019/04/23,08:32:35",
+        "payloadType": "str",
+        "x": 670,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d5795cbbe44be535",
+        "type": "function",
+        "z": "6e045fe6e773ef13",
+        "name": "Map Splitter",
+        "func": "var str = msg.payload;\nvar msg1 = {};\nvar msg2 = {};\nvar msg3 = {};\nvar msg4 = {};\n\nconst words = str.split(\",\");\nflow.set('lon',words[1]);\nflow.set('lat',words[2]);\nflow.set('date',words[3]);\nflow.set('lul',words[4]);\n\nmsg.payload = {\"name\":words[4], \"lat\":words[2], \"lon\":words[1]};\nmsg1 = { payload : words[2] };\nmsg2 = { payload : words[1] };\nmsg3 = { payload : words[4] };\nmsg4 = { payload : words[3] };\n\nreturn [ msg, msg1, msg2, msg3, msg4 ];",
+        "outputs": 5,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 640,
+        "wires": [
+            [
+                "b89edcf82eac7c9e"
+            ],
+            [
+                "80c3d5b2c29934ed",
+                "59b4d86597ae8eed"
+            ],
+            [
+                "a19a6234a46e39bf",
+                "59b4d86597ae8eed"
+            ],
+            [
+                "2a2bb027e1c24f46"
+            ],
+            [
+                "1938d8c11fddc61f"
+            ]
+        ]
+    },
+    {
+        "id": "b89edcf82eac7c9e",
+        "type": "ui_worldmap",
+        "z": "6e045fe6e773ef13",
+        "group": "659e05c71cf2ea15",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "MAP",
+        "lat": "",
+        "lon": "",
+        "zoom": "1",
+        "layer": "Esri",
+        "cluster": "",
+        "maxage": "",
+        "usermenu": "hide",
+        "layers": "hide",
+        "panit": "false",
+        "panlock": "false",
+        "zoomlock": "false",
+        "hiderightclick": "true",
+        "coords": "none",
+        "showgrid": "false",
+        "allowFileDrop": "true",
+        "path": "/worldmap",
+        "mapname": "",
+        "mapurl": "",
+        "mapopt": "",
+        "mapwms": false,
+        "x": 650,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "80c3d5b2c29934ed",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "ed34ce4896498c99",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Latitude:",
+        "label": "Latitude:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 660,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "a19a6234a46e39bf",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "ed34ce4896498c99",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Longitude:",
+        "label": "Longitude:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 670,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "8c97eefa19876b1e",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "659e05c71cf2ea15",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Google Map Link",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 690,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "59b4d86597ae8eed",
+        "type": "function",
+        "z": "6e045fe6e773ef13",
+        "name": "Gmap link generator",
+        "func": "var x = flow.get('lat');\nvar y = flow.get('lon');\nlet str = \"https://www.google.com/maps/place/\" + x + \",\" + y;\nmsg.payload = str;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 840,
+        "wires": [
+            [
+                "8c97eefa19876b1e"
+            ]
+        ]
+    },
+    {
+        "id": "30bcefc92ae864c1",
+        "type": "mqtt in",
+        "z": "6e045fe6e773ef13",
+        "name": "map",
+        "topic": "map",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "89d72d1177fd259d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 640,
+        "wires": [
+            [
+                "d5795cbbe44be535"
+            ]
+        ]
+    },
+    {
+        "id": "01b203948e61a406",
+        "type": "mqtt in",
+        "z": "6e045fe6e773ef13",
+        "name": "battery",
+        "topic": "battery",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "89d72d1177fd259d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 560,
+        "wires": [
+            [
+                "75e38301580c6724"
+            ]
+        ]
+    },
+    {
+        "id": "c7c64b3fd95db4c0",
+        "type": "mqtt in",
+        "z": "6e045fe6e773ef13",
+        "name": "oxy",
+        "topic": "oxy",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "89d72d1177fd259d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 480,
+        "wires": [
+            [
+                "9f27ec814832b392",
+                "626893714b60cd47",
+                "e26b45d235605e0e"
+            ]
+        ]
+    },
+    {
+        "id": "a86a7b5faffdf142",
+        "type": "mqtt in",
+        "z": "6e045fe6e773ef13",
+        "name": "hr",
+        "topic": "hr",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "89d72d1177fd259d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 220,
+        "wires": [
+            [
+                "8ce6cbdaccbcef77",
+                "c3c4f7288e48c89e",
+                "f51aab800721d70e"
+            ]
+        ]
+    },
+    {
+        "id": "2a2bb027e1c24f46",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "ed34ce4896498c99",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Last updated time: ",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 690,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "1938d8c11fddc61f",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "ed34ce4896498c99",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Last updated date: ",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 690,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "7c0ec9f623f89d91",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "485ca1d4fc8b4fa2",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "HEART RATE:",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 1010,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "ed07d133da36e3c8",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "485ca1d4fc8b4fa2",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "SpO2 Level:",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 1010,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "56012a081dec1460",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "485ca1d4fc8b4fa2",
+        "order": 4,
+        "width": 2,
+        "height": 1,
+        "name": "",
+        "label": "BPM",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 1150,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "5edc70e095080504",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "485ca1d4fc8b4fa2",
+        "order": 9,
+        "width": 2,
+        "height": 1,
+        "name": "",
+        "label": "%",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "x": 1150,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "bde4957dd83c5cbc",
+        "type": "inject",
+        "z": "6e045fe6e773ef13",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1",
+        "payloadType": "num",
+        "x": 650,
+        "y": 200,
+        "wires": [
+            [
+                "4478e325c0915ae5"
+            ]
+        ]
+    },
+    {
+        "id": "9fa06eb266f449fa",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "b1a1df82f00acae8",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "DATE:",
+        "format": "{{myymd}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 830,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "4478e325c0915ae5",
+        "type": "simpletime",
+        "z": "6e045fe6e773ef13",
+        "name": "",
+        "mydate": false,
+        "myymd": true,
+        "myyear": false,
+        "mymonth": false,
+        "mymonthn": false,
+        "mydom": false,
+        "mydoy": false,
+        "myday": false,
+        "myhourpm": false,
+        "myhour": false,
+        "mytime": false,
+        "mytimes": true,
+        "myminute": false,
+        "myminutes": false,
+        "mysecond": false,
+        "mymillis": false,
+        "myepoch": false,
+        "myrawdate": false,
+        "mypm": false,
+        "x": 670,
+        "y": 240,
+        "wires": [
+            [
+                "9fa06eb266f449fa",
+                "b64aab5db03f3f34"
+            ]
+        ]
+    },
+    {
+        "id": "b64aab5db03f3f34",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "b1a1df82f00acae8",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "TIME:",
+        "format": "{{msg.mytimes}} ",
+        "layout": "row-spread",
+        "className": "",
+        "x": 830,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "75e38301580c6724",
+        "type": "ui_artlessgauge",
+        "z": "6e045fe6e773ef13",
+        "group": "b1a1df82f00acae8",
+        "order": 4,
+        "width": 6,
+        "height": 2,
+        "name": "Battery Level:",
+        "icon": "",
+        "label": "Battery Level:",
+        "unit": "%",
+        "layout": "linear",
+        "decimals": 0,
+        "differential": false,
+        "minmax": false,
+        "colorTrack": "#555555",
+        "style": "",
+        "colorFromTheme": true,
+        "property": "payload",
+        "secondary": "secondary",
+        "inline": true,
+        "animate": true,
+        "sectors": [
+            {
+                "val": 0,
+                "col": "#ff0000",
+                "t": "min",
+                "dot": 0
+            },
+            {
+                "val": 20,
+                "col": "#eb8900",
+                "t": "sec",
+                "dot": 0
+            },
+            {
+                "val": 50,
+                "col": "#fbfb0e",
+                "t": "sec",
+                "dot": 0
+            },
+            {
+                "val": 70,
+                "col": "#08bf0b",
+                "t": "sec",
+                "dot": 0
+            },
+            {
+                "val": 100,
+                "col": "#08bf0b",
+                "t": "max",
+                "dot": 0
+            }
+        ],
+        "lineWidth": "7",
+        "bgcolorFromTheme": true,
+        "diffCenter": "",
+        "x": 360,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "f51aab800721d70e",
+        "type": "function",
+        "z": "6e045fe6e773ef13",
+        "name": "Hr report",
+        "func": "var hr = msg.payload;\nif(hr<=40) {\n    msg = { payload : \"ABNORMAL!!!\" };\n}\nelse {\n    msg = { payload : \"Normal\" };\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 340,
+        "wires": [
+            [
+                "895389d0159fa638"
+            ]
+        ]
+    },
+    {
+        "id": "895389d0159fa638",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "b101a6958166b46c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Vitals Report",
+        "label": "",
+        "format": "Heart Rate : {{msg.payload}}",
+        "layout": "row-center",
+        "className": "",
+        "x": 530,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "e26b45d235605e0e",
+        "type": "function",
+        "z": "6e045fe6e773ef13",
+        "name": "Spo2 report",
+        "func": "var spo = msg.payload;\nif(spo<=80) {\n    msg = { payload : \"ABNORMAL!!!\" };\n}\nelse {\n    msg = { payload : \"Normal\" };\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 400,
+        "wires": [
+            [
+                "fa0ebb5b1a453f1b"
+            ]
+        ]
+    },
+    {
+        "id": "fa0ebb5b1a453f1b",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "b101a6958166b46c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Vitals Report s",
+        "label": "",
+        "format": "Blood Oxygen : {{msg.payload}}",
+        "layout": "row-center",
+        "className": "",
+        "x": 540,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "6e8dde1085ade05b",
+        "type": "mqtt in",
+        "z": "6e045fe6e773ef13",
+        "name": "distress",
+        "topic": "distress",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "89d72d1177fd259d",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 920,
+        "wires": [
+            [
+                "d0c2e7a448a443c5"
+            ]
+        ]
+    },
+    {
+        "id": "d0c2e7a448a443c5",
+        "type": "function",
+        "z": "6e045fe6e773ef13",
+        "name": "Button click check",
+        "func": "var x = msg.payload;\n\nif(x>=1) {\n    msg = { payload : \"PERSON IN DISTRESS. DEPLOY ASSISTANCE\", \n            topic : \"red\" };\n    }\nelse {\n     msg = { payload : \"No distress raised\", \n            topic : \"green\" };\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nvar x = 10;",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 920,
+        "wires": [
+            [
+                "a7b2bdecc68c7356",
+                "e227245c3d9032ae"
+            ]
+        ]
+    },
+    {
+        "id": "e227245c3d9032ae",
+        "type": "ui_text",
+        "z": "6e045fe6e773ef13",
+        "group": "f3c2d769b76609e7",
+        "order": 1,
+        "width": 6,
+        "height": 2,
+        "name": "",
+        "label": "Distress Status",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 680,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "a7b2bdecc68c7356",
+        "type": "ui_led",
+        "z": "6e045fe6e773ef13",
+        "order": 2,
+        "group": "f3c2d769b76609e7",
+        "width": 0,
+        "height": 0,
+        "label": "",
+        "labelPlacement": "right",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "PERSON IN DISTRESS. DEPLOY ASSISTANCE",
+                "valueType": "str"
+            },
+            {
+                "color": "#ffa500",
+                "value": "User found something. Deploy force",
+                "valueType": "str"
+            },
+            {
+                "color": "#008000",
+                "value": "No distress raised",
+                "valueType": "str"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 650,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "740aee5da0419dbf",
+        "type": "ui_button",
+        "z": "6e045fe6e773ef13",
+        "name": "",
+        "group": "f3c2d769b76609e7",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Acknowledgement",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "0",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 370,
+        "y": 1020,
+        "wires": [
+            [
+                "d0c2e7a448a443c5",
+                "32c3b0e917c47419"
+            ]
+        ]
+    },
+    {
+        "id": "32c3b0e917c47419",
+        "type": "mqtt out",
+        "z": "6e045fe6e773ef13",
+        "name": "led",
+        "topic": "led",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "89d72d1177fd259d",
+        "x": 650,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "6f6f73022d2e12c1",
+        "type": "ui_spacer",
+        "z": "6e045fe6e773ef13",
+        "name": "spacer",
+        "group": "485ca1d4fc8b4fa2",
+        "order": 5,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "1c78332965d4d2c1",
+        "type": "ui_spacer",
+        "z": "6e045fe6e773ef13",
+        "name": "spacer",
+        "group": "485ca1d4fc8b4fa2",
+        "order": 10,
+        "width": 2,
+        "height": 1
+    },
+    {
+        "id": "b1a1df82f00acae8",
+        "type": "ui_group",
+        "name": "General",
+        "tab": "623b4eae5c0ba179",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "485ca1d4fc8b4fa2",
+        "type": "ui_group",
+        "name": "Vitals",
+        "tab": "623b4eae5c0ba179",
+        "order": 3,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "89d72d1177fd259d",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "a3pckw1b6djb2y-ats.iot.us-east-1.amazonaws.com",
+        "port": "8883",
+        "tls": "2b0b06a2deea93b4",
+        "clientid": "Guardian-node",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "659e05c71cf2ea15",
+        "type": "ui_group",
+        "name": "Maps",
+        "tab": "623b4eae5c0ba179",
+        "order": 2,
+        "disp": true,
+        "width": 10,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ed34ce4896498c99",
+        "type": "ui_group",
+        "name": "Co-ordinates",
+        "tab": "623b4eae5c0ba179",
+        "order": 6,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b101a6958166b46c",
+        "type": "ui_group",
+        "name": "Vitals Report",
+        "tab": "623b4eae5c0ba179",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "f3c2d769b76609e7",
+        "type": "ui_group",
+        "name": "Distress",
+        "tab": "623b4eae5c0ba179",
+        "order": 5,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "623b4eae5c0ba179",
+        "type": "ui_tab",
+        "name": "Guardian Dashboard",
+        "icon": "mi-loyalty",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "2b0b06a2deea93b4",
+        "type": "tls-config",
+        "name": "N.Virginia server",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "4bd0dc9ce1fd841a54b14dd70a65595a5341732b1a96ccd7c66304c5a4813d36-certificate.pem.crt",
+        "keyname": "4bd0dc9ce1fd841a54b14dd70a65595a5341732b1a96ccd7c66304c5a4813d36-private.pem.key",
+        "caname": "AmazonRootCA1.pem",
+        "servername": "",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    }
+]
